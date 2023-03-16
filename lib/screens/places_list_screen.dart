@@ -18,23 +18,33 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatPlaces>(
-        child: Center(child: const Text('No places yet! Add some!')),
-        builder: (context, value, child) => value.items.isEmpty
-            ? child!
-            : ListView.builder(
-                itemCount: value.items.length,
-                itemBuilder: (context, index) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: FileImage(value.items[index].image),
-                  ),
-                  title: Text(value.items[index].title),
-                  onTap: () {
-                    // Go to 'Place Detail' page.
-                    Navigator.of(context).pushNamed('/place-detail',
-                        arguments: value.items[index].id);
-                  },
-                ),
+      body: FutureBuilder(
+        future: Provider.of<GreatPlaces>(context, listen: false)
+            .fetchAndSetPlaces(),
+        builder: (ctx, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Consumer<GreatPlaces>(
+                child: Center(child: const Text('No places yet! Add some!')),
+                builder: (context, value, child) => value.items.isEmpty
+                    ? child!
+                    : ListView.builder(
+                        itemCount: value.items.length,
+                        itemBuilder: (context, index) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                FileImage(value.items[index].image),
+                          ),
+                          title: Text(value.items[index].title),
+                          onTap: () {
+                            // Go to 'Place Detail' page.
+                            Navigator.of(context).pushNamed('/place-detail',
+                                arguments: value.items[index].id);
+                          },
+                        ),
+                      ),
               ),
       ),
     );

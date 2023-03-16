@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_great_places/widgets/location_input.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/great_places.dart';
@@ -75,9 +76,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Address'),
-                    ),
+                    LocationInput(),
                   ],
                 ),
               ),

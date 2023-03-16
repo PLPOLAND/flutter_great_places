@@ -32,6 +32,22 @@ class _ImageInputState extends State<ImageInput> {
     widget.selectImage(_storedImage!);
   }
 
+  _selectPicture() async {
+    var imagePicker = ImagePicker();
+    final imageFile = await imagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 600,
+    );
+    setState(() {
+      _storedImage = File(imageFile!.path);
+    });
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile!.path);
+
+    _storedImage!.copy('${appDir.path}/$fileName');
+    widget.selectImage(_storedImage!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +85,9 @@ class _ImageInputState extends State<ImageInput> {
             TextButton.icon(
               icon: Icon(Icons.image),
               label: Text('Select from Gallery'),
-              onPressed: () {},
+              onPressed: () {
+                _selectPicture();
+              },
             ),
           ],
         ),
