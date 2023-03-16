@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_great_places/providers/great_places.dart';
+import 'package:provider/provider.dart';
 
 class PlacesListScreen extends StatelessWidget {
   @override
@@ -9,12 +11,31 @@ class PlacesListScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              // Go to 'Add Place' page.
+              Navigator.of(context).pushNamed('/add-place');
+            },
           ),
         ],
       ),
-      body: Center(
-        child: CircularProgressIndicator(),
+      body: Consumer<GreatPlaces>(
+        child: Center(child: const Text('No places yet! Add some!')),
+        builder: (context, value, child) => value.items.isEmpty
+            ? child!
+            : ListView.builder(
+                itemCount: value.items.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: FileImage(value.items[index].image),
+                  ),
+                  title: Text(value.items[index].title),
+                  onTap: () {
+                    // Go to 'Place Detail' page.
+                    Navigator.of(context).pushNamed('/place-detail',
+                        arguments: value.items[index].id);
+                  },
+                ),
+              ),
       ),
     );
   }
